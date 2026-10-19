@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belga Barber - São Bernardo do Campo</title>
+    <style>
+        :root {
+            --primary-color: #d11e22; 
+            --secondary-color: #f6c026;
+            --bg-color: #0d0d0d;
+            --text-color: #ffffff;
+            --card-bg: #1a1a1a;
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background-color: #000;
+            border-bottom: 2px solid var(--secondary-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo img {
+            height: 70px;
+        }
+        .header-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin: 0;
+            font-family: Georgia, serif;
+            font-style: italic;
+        }
+        .header-address {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin: 0;
+        }
+        .btn-agendar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .btn-agendar:hover {
+            background-color: #a01518;
+        }
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)), url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+        }
+        .rating-badge {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(246, 192, 38, 0.2);
+        }
+        .rating-badge span {
+            color: var(--primary-color);
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        .hero h1 span {
+            color: var(--secondary-color);
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #ccc;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Carousel Styles */
+        .portfolio-section {
+            padding: 60px 20px;
+            background-color: #111;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+        .portfolio-section h2 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .carousel-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            touch-action: pan-y; /* Permite scroll vertical, previne scroll horizontal nativo no mobile */
+        }
+        .carousel-slide {
+            display: none;
+            width: 100%;
+            position: relative;
+        }
+        .carousel-slide.active {
+            display: block;
+            animation: fade 0.8s;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            object-position: center 20%;
+            display: block;
+        }
+        .carousel-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            border-top: 2px solid var(--primary-color);
+            pointer-events: none; /* Evita bugar o touch no mobile */
+        }
+        
+        /* Navigation Arrows */
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.3s;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background-color: rgba(0,0,0,0.5);
+            text-decoration: none;
+            z-index: 10;
+        }
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+        .prev {
+            left: 0;
+        }
+        .prev:hover, .next:hover {
+            background-color: var(--primary-color);
+        }
+
+        /* Dots */
+        .dots-container {
+            text-align: center;
+            padding: 20px;
+            background-color: #111;
+        }
+        .dot {
+            cursor: pointer;
+            height: 12px;
+            width: 12px;
+            margin: 0 5px;
+            background-color: #555;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+        .dot.active, .dot:hover {
+            background-color: var(--secondary-color);
+        }
+
+        @keyframes fade {
+            from {opacity: .4} 
+            to {opacity: 1}
+        }
+
+        .services-section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-title {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .combos-container, .services-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .service-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 30px;
+            border: 1px solid #333;
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+        .discount-tag {
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #444;
+            padding-bottom: 15px;
+        }
+        .service-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin: 0;
+        }
+        .service-price-area {
+            text-align: right;
+        }
+        .old-price {
+            text-decoration: line-through;
+            color: #777;
+            font-size: 0.9rem;
+            display: block;
+        }
+        .new-price {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        .service-duration {
+            color: #aaa;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .social-proof {
+            background-color: #111;
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+        .proof-stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        .stat-label {
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .amenities {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .amenity-tag {
+            background-color: #222;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #ccc;
+            border: 1px solid #444;
+        }
+
+        footer {
+            background-color: #000;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .footer-info p {
+            color: #888;
+            margin: 8px 0;
+            font-size: 0.95rem;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 15px;
+                gap: 15px;
+            }
+            .header-info {
+                align-items: center;
+                text-align: center;
+            }
+            .btn-agendar {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .carousel-slide img {
+                height: 350px; /* Ajuste para não cortar muito no celular */
+                object-position: center;
+            }
+            .carousel-caption {
+                font-size: 1rem;
+                padding: 10px;
+            }
+            /* Esconde as setas laterais no mobile pois vamos usar o dedo (swipe) */
+            .prev, .next {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <div class="logo">
+            <img src="img/image.png" alt="Logo Belga Barber">
+        </div>
+        <div class="header-info">
+            <h2 class="header-title">Belga Barber</h2>
+            <p class="header-address">Av. Álvaro Guimarães, 3012 - SBC</p>
+        </div>
+    </div>
+    <a href="#servicos" class="btn-agendar">Agendar Agora</a>
+</header>
+
+<section class="hero">
+    <div class="rating-badge">★ 5.0 <span>(1157+ Avaliações)</span></div>
+    <h1>Experiência Premium,<br><span>Preço Justo.</span></h1>
+    <p>Recomendado pelo Booksy. Junte-se a mais de mil clientes satisfeitos que confiam seu estilo à equipe da Belga Barber.</p>
+    <br>
+    <a href="https://wa.me/5511999999999?text=Olá,%20vi%20o%20site%20e%20gostaria%20de%20agendar%20um%20horário!" class="btn-agendar" style="padding: 18px 40px; font-size: 1.1rem; display: inline-block; width: auto;" target="_blank">Agendar pelo WhatsApp</a>
+</section>
+
+<!-- Seção de Portfólio com Carrossel Otimizado para Mobile -->
+<section class="portfolio-section">
+    <h2>Nosso Trabalho</h2>
+    <div class="carousel-container" id="touch-area">
+        
+        <div class="carousel-slide active">
+            <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80" alt="Estrutura da Barbearia">
+            <div class="carousel-caption">Estrutura e Equipe Preparada</div>
+        </div>
+
+        <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80" alt="Corte Moderno">
+            <div class="carousel-caption">Cortes Clássicos e Fades Modernos</div>
+        </div>
+
+        <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80" alt="Alinhamento e Navalha">
+            <div class="carousel-caption">Acabamento na Navalha</div>
+        </div>
+        
+        <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1521484378772-52033bccebb3?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80" alt="Barboterapia">
+            <div class="carousel-caption">Barboterapia e Cuidados</div>
+        </div>
+        
+        <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80" alt="Equipamentos">
+            <div class="carousel-caption">Produtos Premium e Higiene</div>
+        </div>
+        
+        <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1593702288056-ccbfb24cebb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80" alt="Corte Comb Over Fade">
+            <div class="carousel-caption">O Estilo que Você Merece</div>
+        </div>
+
+        <!-- Next and previous buttons (Visible on Desktop only) -->
+        <a class="prev" onclick="mudarSlide(-1)">&#10094;</a>
+        <a class="next" onclick="mudarSlide(1)">&#10095;</a>
+    </div>
+
+    <!-- Dots -->
+    <div class="dots-container">
+        <span class="dot active" onclick="irParaSlide(1)"></span>
+        <span class="dot" onclick="irParaSlide(2)"></span>
+        <span class="dot" onclick="irParaSlide(3)"></span>
+        <span class="dot" onclick="irParaSlide(4)"></span>
+        <span class="dot" onclick="irParaSlide(5)"></span>
+        <span class="dot" onclick="irParaSlide(6)"></span>
+    </div>
+</section>
+
+<section class="services-section" id="servicos">
+    <h2 class="section-title">Combos Mais Pedidos</h2>
+    <div class="combos-container">
+        <div class="service-card">
+            <div class="discount-tag">-7%</div>
+            <div class="service-header">
+                <h3 class="service-name">Corte + Barba</h3>
+                <div class="service-price-area">
+                    <span class="old-price">R$ 90,00</span>
+                    <span class="new-price">R$ 83,70</span>
+                </div>
+            </div>
+            <p class="service-duration">⏱ 1h</p>
+        </div>
+        
+        <div class="service-card">
+            <div class="discount-tag">-7%</div>
+            <div class="service-header">
+                <h3 class="service-name">Corte + Barboterapia</h3>
+                <div class="service-price-area">
+                    <span class="old-price">R$ 105,00</span>
+                    <span class="new-price">R$ 97,65</span>
+                </div>
+            </div>
+            <p class="service-duration">⏱ 1h</p>
+        </div>
+
+        <div class="service-card">
+            <div class="discount-tag">-7%</div>
+            <div class="service-header">
+                <h3 class="service-name">Corte + Progressiva</h3>
+                <div class="service-price-area">
+                    <span class="old-price">R$ 85,00</span>
+                    <span class="new-price">R$ 79,05</span>
+                </div>
+            </div>
+            <p class="service-duration">⏱ 50min</p>
+        </div>
+    </div>
+
+    <h2 class="section-title" style="margin-top: 80px; font-size: 2rem;">Serviços Individuais</h2>
+    <div class="services-container">
+        <div class="service-card">
+            <div class="service-header">
+                <h3 class="service-name">Corte com Equipe</h3>
+                <div class="service-price-area">
+                    <span class="old-price">R$ 50,00</span>
+                    <span class="new-price">R$ 46,50</span>
+                </div>
+            </div>
+            <p class="service-duration" style="margin-bottom: 0;">Promoção de segunda a quinta-feira. ⏱ 40min</p>
+        </div>
+
+        <div class="service-card">
+            <div class="service-header">
+                <h3 class="service-name">Barboterapia</h3>
+                <div class="service-price-area">
+                    <span class="old-price">R$ 55,00</span>
+                    <span class="new-price">R$ 51,15</span>
+                </div>
+            </div>
+            <p class="service-duration" style="margin-bottom: 0;">⏱ 30min</p>
+        </div>
+        
+        <div class="service-card">
+            <div class="service-header">
+                <h3 class="service-name">Corte com Rafael</h3>
+                <div class="service-price-area">
+                    <span class="old-price">R$ 60,00</span>
+                    <span class="new-price">R$ 55,80</span>
+                </div>
+            </div>
+            <p class="service-duration" style="margin-bottom: 0;">⏱ 40min</p>
+        </div>
+    </div>
+</section>
+
+<section class="social-proof">
+    <h2 style="color: var(--secondary-color); font-size: 2rem; margin-top: 0;">Por que escolher a Belga Barber?</h2>
+    <div class="proof-stats">
+        <div class="stat-item">
+            <span class="stat-number">5.0</span>
+            <span class="stat-label">Nota Máxima</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">1157+</span>
+            <span class="stat-label">Avaliações de Clientes</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Recomendado pelo Booksy</span>
+        </div>
+    </div>
+    
+    <div class="amenities">
+        <span class="amenity-tag">✓ Estacionamento</span>
+        <span class="amenity-tag">✓ Wi-Fi Grátis</span>
+        <span class="amenity-tag">✓ Acessibilidade</span>
+        <span class="amenity-tag">✓ Pet Friendly</span>
+        <span class="amenity-tag">✓ Aceita Cartões</span>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-info">
+            <h3 style="color: var(--secondary-color); font-family: Georgia, serif; font-style: italic; font-size: 1.8rem; margin-bottom: 10px;">Belga Barber</h3>
+            <p>Avenida Álvaro Guimarães, 3012</p>
+            <p>CEP: 09810-010 | São Bernardo do Campo - SP</p>
+        </div>
+        <div class="footer-cta" style="margin-top: 30px;">
+            <a href="https://wa.me/5511999999999?text=Olá,%20gostaria%20de%20agendar%20um%20horário!" class="btn-agendar" target="_blank">Agendar Meu Horário</a>
+        </div>
+        <p style="margin-top: 40px; color: #555; font-size: 0.8rem;">&copy; 2026 Belga Barber. Desenvolvido sob medida.</p>
+    </div>
+</footer>
+
+<!-- Script do Carrossel com Suporte a Mobile (Swipe) -->
+<script>
+    let slideIndex = 1;
+    mostrarSlides(slideIndex);
+
+    let autoPlayInterval = setInterval(function() {
+        mudarSlide(1);
+    }, 3000);
+
+    const touchArea = document.getElementById('touch-area');
+
+    // Pausar auto-play quando o usuário interage
+    touchArea.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+    touchArea.addEventListener('mouseleave', () => {
+        autoPlayInterval = setInterval(function() { mudarSlide(1); }, 3000);
+    });
+
+    // --- LÓGICA DE SWIPE PARA MOBILE ---
+    let touchstartX = 0;
+    let touchendX = 0;
+
+    touchArea.addEventListener('touchstart', e => {
+        touchstartX = e.changedTouches[0].screenX;
+        clearInterval(autoPlayInterval); // Pausa ao tocar
+    }, {passive: true});
+
+    touchArea.addEventListener('touchend', e => {
+        touchendX = e.changedTouches[0].screenX;
+        handleGesture();
+        // Retoma o autoplay
+        autoPlayInterval = setInterval(function() { mudarSlide(1); }, 3000);
+    }, {passive: true});
+
+    function handleGesture() {
+        // Se o movimento for maior que 40px, conta como swipe
+        if (touchendX < touchstartX - 40) mudarSlide(1); // Swipe para esquerda (Próximo)
+        if (touchendX > touchstartX + 40) mudarSlide(-1); // Swipe para direita (Anterior)
+    }
+    // ------------------------------------
+
+    function mudarSlide(n) {
+        mostrarSlides(slideIndex += n);
+    }
+
+    function irParaSlide(n) {
+        mostrarSlides(slideIndex = n);
+    }
+
+    function mostrarSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("carousel-slide");
+        let dots = document.getElementsByClassName("dot");
+        
+        if (n > slides.length) {slideIndex = 1}
+        if (n < 1) {slideIndex = slides.length}
+        
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+        
+        slides[slideIndex-1].style.display = "block";
+        dots[slideIndex-1].className += " active";
+    }
+</script>
+
+</body>
+</html>
